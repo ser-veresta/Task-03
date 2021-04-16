@@ -12,11 +12,12 @@ countryReq.onload = function(){
     let data = JSON.parse(this.response);
     //to print the names of the countries in the response
     for(let item of data){
-        if(item.latlng.length){
+        try{
+            if(!item.latlng.length) throw new Error("latitude longitude not available");
             printWeather(item.name,...item.latlng);
         }
-        else{
-            continue;
+        catch(e){
+            console.log(`${item.name}: ${e.message}`);
         }
     }
 }
@@ -24,7 +25,7 @@ countryReq.onload = function(){
 //function to print the temp of countries by lat lon
 function printWeather(name,lat,lon){
     //updating the url for each country by lat lan
-    let url = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&appid=015dc506bacd5af5c9281f26d046b222";
+    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=015dc506bacd5af5c9281f26d046b222`;
     //call the weather api for each country
     let weatherReq = new XMLHttpRequest();
     weatherReq.open("GET",url,true);
@@ -32,9 +33,9 @@ function printWeather(name,lat,lon){
     //printing the temprature of the country
     weatherReq.onload = function(){
         let data = JSON.parse(this.response);
-        console.log(name + ": " + data.main.temp);
+        console.log(`${name}: ${data.main.temp}`);
     }
 
     //alternate fetch method to get the response from api
-    // let response = fetch(url).then((res)=>res.json()).then((d)=>console.log(name + ": " + d.main.temp));
+    // let response = fetch(url).then(res=>res.json()).then(d=>console.log(`${name}: ${data.main.temp}`));
 }
