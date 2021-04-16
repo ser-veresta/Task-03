@@ -11,7 +11,7 @@ countryReq.send();
 countryReq.onload = function(){
     let data = JSON.parse(this.response);
     //to print the names of the countries in the response
-    for(let item of data){
+    data.forEach((item) => {
         try{
             if(!item.latlng.length) throw new Error("latitude longitude not available");
             printWeather(item.name,...item.latlng);
@@ -19,7 +19,7 @@ countryReq.onload = function(){
         catch(e){
             console.log(`${item.name}: ${e.message}`);
         }
-    }
+    });
 }
 
 //function to print the temp of countries by lat lon
@@ -37,5 +37,5 @@ function printWeather(name,lat,lon){
     }
 
     //alternate fetch method to get the response from api
-    // let response = fetch(url).then(res=>res.json()).then(d=>console.log(`${name}: ${data.main.temp}`));
+    //let response = fetch(url).then(res=>res.json()).then(d=>console.log(`${name}: ${data.main.temp}`));
 }
